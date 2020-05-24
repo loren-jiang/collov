@@ -7,10 +7,16 @@ export default {
   },
   postMessage(payload) {
     return api.post(`messages/`, payload)
-              .then(response => response.data)
+              .then(response => {
+                console.log("added",response.data)
+                return response.data
+              })
   },
-  deleteMessage(msgId) {
-    return api.delete(`messages/${msgId}`)
-              .then(response => response.data)
-  }
+  deleteMessage(id) {
+    return api.delete(`messages/${id}`)
+              .then(response => {
+                console.log("deleted",response.data)
+                return response.data
+              })
+  },
 }

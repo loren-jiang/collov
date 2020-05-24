@@ -1,7 +1,7 @@
 import messageService from '../../services/messageService'
 
 const state = {
-  messages: []
+  messages: [],
 }
 
 const getters = {
@@ -11,26 +11,38 @@ const getters = {
 }
 
 const actions = {
-  getMessages ({ commit }) {
+  getMessages({ commit }) {
     messageService.fetchMessages()
-    .then(messages => {
-      commit('setMessages', messages)
-    })
+      .then(messages => {
+        commit('setMessages', messages)
+      })
   },
   addMessage({ commit }, message) {
     messageService.postMessage(message)
-    .then(() => {
-      commit('addMessage', message)
-    })
+      .then((resp) => {
+
+        const fields = ['subject', 'body', 'pk'];
+
+        const filtered = Object.keys(resp)
+          .filter(key => fields.includes(key))
+          .reduce((obj, key) => {
+            obj[key] = resp[key];
+            return obj;
+          }, {});
+        console.log("resp", filtered);
+        console.log("message", message)
+        commit('addMessage', filtered)
+        // commit('addMessage', message)
+      })
   },
-  deleteMessage( { commit }, msgId) {
+  deleteMessage({ commit }, msgId) {
     messageService.deleteMessage(msgId)
     commit('deleteMessage', msgId)
   }
 }
 
 const mutations = {
-  setMessages (state, messages) {
+  setMessages(state, messages) {
     state.messages = messages
   },
   addMessage(state, message) {

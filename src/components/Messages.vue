@@ -18,6 +18,7 @@
     <h3>Messages on Database</h3>
     <p v-if="messages.length === 0">No Messages</p>
     <div class="msg" v-for="(msg, index) in messages" :key="index">
+        <p class="msg-pk" v-html="msg.pk"></p>
         <p class="msg-index">[{{index}}]</p>
         <p class="msg-subject" v-html="msg.subject"></p>
         <p class="msg-body" v-html="msg.body"></p>
@@ -27,7 +28,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Messages",
@@ -38,15 +39,13 @@ export default {
     };
   },
   computed: mapState({
-    messages: state => state.messages.messages
+    messages: (state) => state.messages.messages,
   }),
-  methods: mapActions('messages', [
-    'addMessage',
-    'deleteMessage'
-  ]),
+  methods: mapActions("messages", ["addMessage", "deleteMessage", "getMessages"]),
   created() {
-    this.$store.dispatch('messages/getMessages')
-  }
+    console.log("created()")
+    this.$store.dispatch("messages/getMessages");
+  },
 };
 </script>
 
@@ -75,5 +74,4 @@ img {
   padding-top: 50px;
   padding-bottom: 50px;
 }
-
 </style>

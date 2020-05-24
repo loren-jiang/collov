@@ -1,0 +1,96 @@
+<template>
+  <div class="hello">
+    <Kanban/>
+    <br/>
+    <p>First name</p>
+    <input type="text" placeholder="First name" v-model="first_name">
+    <p>Last name</p>
+    <input type="text" placeholder="Last name" v-model="last_name">
+    <p>Phone number</p>
+    <input type="text" placeholder="Phone number" v-model="phone">
+    <p>Address</p>
+    <input type="text" placeholder="Address" v-model="address">
+    <p>Stage</p>
+    <input type="text" placeholder="Stage" v-model="stage">
+    <br><br>
+    <input 
+      type="submit" 
+      value="Add" 
+      @click="addCandidate({ 
+        first_name: first_name, 
+        last_name: last_name, 
+        phone: phone, 
+        address: address, 
+        stage: stage })" 
+      :disabled="!first_name || !last_name || !phone || !address || !stage">
+
+    <hr/>
+    <h3>Candidates on Database</h3>
+    <p v-if="candidates.length === 0">No Candidates</p>
+    <div class="candidate" v-for="(candidate, index) in candidates" :key="index">
+        <p class="candidate-index">[{{index}}]</p>
+        <p class="candidate-pk" v-html="candidate.pk"></p>
+        <p class="candidate-first-name" v-html="candidate.first_name"></p>
+        <p class="candidate-last-name" v-html="candidate.last_name"></p>
+        <p class="candidate-phone" v-html="candidate.phone"></p>
+        <p class="candidate-address" v-html="candidate.address"></p>
+        <p class="candidate-stage" v-html="candidate.stage"></p>
+        <input type="submit" @click="deleteCandidate(candidate.pk)" value="Delete" />
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+import Kanban from "./Kanban";
+
+export default {
+  name: "Candidates",
+  data() {
+    return {
+      first_name: "",
+      last_name: "",
+      phone: "",
+      address: "",
+      stage: "",
+    };
+  },
+  computed: mapState({
+    candidates: (state) => state.candidates.candidates,
+  }),
+  methods: mapActions("candidates", ["addCandidate", "deleteCandidate"]),
+  created() {
+    this.$store.dispatch("candidates/getCandidates");
+  },
+  components: {
+    Kanban,
+  },
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+hr {
+  max-width: 65%;
+}
+
+.candidate {
+  margin: 0 auto;
+  max-width: 30%;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+  padding: 1rem;
+}
+
+.candidate-index {
+  color: #ccc;
+  font-size: 0.8rem;
+  /* margin-bottom: 0; */
+}
+
+img {
+  width: 250px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+</style>

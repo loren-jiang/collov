@@ -7,22 +7,19 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from django.conf.urls.static import static
+from django.conf import settings
 
-from .api.views import index_view, MessageViewSet
+from .api.views import index_view, MessageViewSet, CandidateViewSet
 
 router = routers.DefaultRouter()
 router.register('messages', MessageViewSet)
+router.register('candidates', CandidateViewSet)
 
 urlpatterns = [
 
-    # http://localhost:8000/
     path('', index_view, name='index'),
-
-    # http://localhost:8000/api/<router-viewsets>
     path('api/', include(router.urls)),
-
-    # http://localhost:8000/api/admin/
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/admin/', admin.site.urls),
-]
-
-
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # this only serves media files during development
