@@ -1,48 +1,62 @@
 <template>
-  <div class="hello">
-    <Kanban/>
-    <br/>
+  <v-container class="hello">
+    <Kanban v-bind:candidatesGrouped="candidatesGrouped" />
+    <br />
     <p>First name</p>
-    <input type="text" placeholder="First name" v-model="first_name">
+    <input type="text" placeholder="First name" v-model="first_name" />
     <p>Last name</p>
-    <input type="text" placeholder="Last name" v-model="last_name">
+    <input type="text" placeholder="Last name" v-model="last_name" />
     <p>Phone number</p>
-    <input type="text" placeholder="Phone number" v-model="phone">
+    <input type="text" placeholder="Phone number" v-model="phone" />
     <p>Address</p>
-    <input type="text" placeholder="Address" v-model="address">
+    <input type="text" placeholder="Address" v-model="address" />
     <p>Stage</p>
-    <input type="text" placeholder="Stage" v-model="stage">
-    <br><br>
-    <input 
-      type="submit" 
-      value="Add" 
-      @click="addCandidate({ 
-        first_name: first_name, 
-        last_name: last_name, 
-        phone: phone, 
-        address: address, 
-        stage: stage })" 
-      :disabled="!first_name || !last_name || !phone || !address || !stage">
+    <input type="text" placeholder="Stage" v-model="stage" />
+    <br /><br />
+    <input
+      type="submit"
+      value="Add"
+      @click="
+        addCandidate({
+          first_name: first_name,
+          last_name: last_name,
+          phone: phone,
+          address: address,
+          stage: stage,
+        })
+      "
+      :disabled="!first_name || !last_name || !phone || !address || !stage"
+    />
 
-    <hr/>
+    <hr />
     <h3>Candidates on Database</h3>
     <p v-if="candidates.length === 0">No Candidates</p>
-    <div class="candidate" v-for="(candidate, index) in candidates" :key="index">
-        <p class="candidate-index">[{{index}}]</p>
-        <p class="candidate-pk" v-html="candidate.pk"></p>
-        <p class="candidate-first-name" v-html="candidate.first_name"></p>
-        <p class="candidate-last-name" v-html="candidate.last_name"></p>
-        <p class="candidate-phone" v-html="candidate.phone"></p>
-        <p class="candidate-address" v-html="candidate.address"></p>
-        <p class="candidate-stage" v-html="candidate.stage"></p>
-        <input type="submit" @click="deleteCandidate(candidate.pk)" value="Delete" />
+    <div
+      class="candidate"
+      v-for="(candidate, index) in candidates"
+      :key="index"
+    >
+      <p class="candidate-index">[{{ index }}]</p>
+      <p class="candidate-pk" v-html="candidate.pk"></p>
+      <p class="candidate-first-name" v-html="candidate.first_name"></p>
+      <p class="candidate-last-name" v-html="candidate.last_name"></p>
+      <p class="candidate-phone" v-html="candidate.phone"></p>
+      <p class="candidate-address" v-html="candidate.address"></p>
+      <p class="candidate-stage" v-html="candidate.stage"></p>
+      <input
+        type="submit"
+        @click="deleteCandidate(candidate.pk)"
+        value="Delete"
+      />
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import Kanban from "./Kanban";
+
+const STAGES = ["AP", "PS", "OS", "OF", "AC", "RE"];
 
 export default {
   name: "Candidates",
@@ -57,6 +71,14 @@ export default {
   },
   computed: mapState({
     candidates: (state) => state.candidates.candidates,
+    candidatesGrouped: (state) => {
+      const allCandidates = state.candidates.candidates;
+      const stageMap = {};
+      STAGES.forEach((s) => {
+        stageMap[s] = allCandidates.filter((c) => c.stage === s);
+      });
+      return stageMap;
+    },
   }),
   methods: mapActions("candidates", ["addCandidate", "deleteCandidate"]),
   created() {
