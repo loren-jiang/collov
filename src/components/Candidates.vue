@@ -1,62 +1,84 @@
 <template>
   <v-container class="kanban-board">
-    <!-- <Kanban :candidatesGrouped="candidatesGrouped" :candidates="candidates" /> -->
-    <Kanban />
-    <br />
-    <p>First name</p>
-    <input type="text" placeholder="First name" v-model="first_name" />
-    <p>Last name</p>
-    <input type="text" placeholder="Last name" v-model="last_name" />
-    <p>Phone number</p>
-    <input type="text" placeholder="Phone number" v-model="phone" />
-    <p>Address</p>
-    <input type="text" placeholder="Address" v-model="address" />
-    <p>Stage</p>
-    <select type="text" placeholder="Stage" v-model="stage" value="AP">
-      <option value="AP">Applied</option>
-      <option value="PS">Phone screen</option>
-      <option value="OS">On site</option>
-      <option value="OF">Offered</option>
-      <option value="AC">Accepted</option>
-      <option value="RE">Rejected</option>
-    </select>
-    <br /><br />
-    <v-btn
-      type="submit"
-      @click="
-        addCandidate({
-          first_name: first_name,
-          last_name: last_name,
-          phone: phone,
-          address: address,
-          stage: stage,
-        })
-      "
-      :disabled="!first_name || !last_name || !phone || !address || !stage"
-    >
-      Add
-    </v-btn>
+    <v-app-bar app color="primary" dark>
+      <div class="d-flex align-center">
+        <h1>
+          Collov-Kanban
+        </h1>
+      </div>
 
-    <hr />
-    <h3>Candidates on Database</h3>
-    <p v-if="candidates.length === 0">No Candidates</p>
-    <div
-      class="candidate"
-      v-for="(candidate, index) in candidates"
-      :key="candidate.pk"
-    >
-      <p class="candidate-index">[{{ index }}]</p>
-      <p class="candidate-pk" v-html="candidate.pk"></p>
-      <p class="candidate-first-name" v-html="candidate.first_name"></p>
-      <p class="candidate-last-name" v-html="candidate.last_name"></p>
-      <p class="candidate-phone" v-html="candidate.phone"></p>
-      <p class="candidate-address" v-html="candidate.address"></p>
-      <p class="candidate-stage" v-html="candidate.stage"></p>
-      <v-btn color="error" @click="deleteCandidate(candidate.pk)">
-        Delete
-      </v-btn>
-      <ModalCandidateUpdate :candidate="candidate" />
-    </div>
+      <v-spacer></v-spacer>
+
+      <span class="mr-2">
+        <v-btn
+          text
+          @click="
+            newCandidateModal = true;
+            addCandidate;
+          "
+        >
+          <v-icon>mdi-account-plus</v-icon>
+        </v-btn>
+        <v-btn text>
+          <v-icon>mdi-login-variant</v-icon>
+        </v-btn>
+      </span>
+    </v-app-bar>
+    <Kanban />
+    <v-dialog v-model="newCandidateModal" max-width="500px">
+      <v-card>
+        <v-card-title class="headline"> Add candidate </v-card-title>
+
+        <v-card-text>
+          <v-container>
+            <br />
+            <p>First name</p>
+            <input type="text" placeholder="First name" v-model="first_name" />
+            <p>Last name</p>
+            <input type="text" placeholder="Last name" v-model="last_name" />
+            <p>Phone number</p>
+            <input type="text" placeholder="Phone number" v-model="phone" />
+            <p>Address</p>
+            <input type="text" placeholder="Address" v-model="address" />
+            <p>Stage</p>
+            <select type="text" placeholder="Stage" v-model="stage">
+              <option value="AP">Applied</option>
+              <option value="PS">Phone screen</option>
+              <option value="OS">On site</option>
+              <option value="OF">Offered</option>
+              <option value="AC">Accepted</option>
+              <option value="RE">Rejected</option>
+            </select>
+            <br /><br />
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            type="submit"
+            @click="
+              addCandidate({
+                first_name: first_name,
+                last_name: last_name,
+                phone: phone,
+                address: address,
+                stage: stage,
+              });
+              newCandidateModal = false;
+            "
+            :disabled="
+              !first_name || !last_name || !phone || !address || !stage
+            "
+          >
+            Add
+          </v-btn>
+          <v-btn color="blue darken-1" text @click="newCandidateModal = false"
+            >Close</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -64,8 +86,7 @@
 import { mapState, mapActions } from "vuex";
 import Kanban from "./Kanban";
 import ModalCandidateUpdate from "./ModalCandidateUpdate";
-
-const STAGES = ["AP", "PS", "OS", "OF", "AC", "RE"];
+import { StagesMap } from "../utils/data";
 
 export default {
   name: "Candidates",
@@ -75,19 +96,12 @@ export default {
       last_name: "",
       phone: "",
       address: "",
-      stage: "",
+      stage: Object.keys(StagesMap)[0],
+      newCandidateModal: false,
     };
   },
   computed: mapState({
     candidates: (state) => state.candidates.candidates,
-    candidatesGrouped: (state) => {
-      const allCandidates = state.candidates.candidates;
-      const stageMap = {};
-      STAGES.forEach((s) => {
-        stageMap[s] = allCandidates.filter((c) => c.stage === s);
-      });
-      return stageMap;
-    },
   }),
   methods: mapActions("candidates", ["addCandidate", "deleteCandidate"]),
   created() {

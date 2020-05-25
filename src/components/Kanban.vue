@@ -1,42 +1,49 @@
 <template>
   <div class="kanban-board">
-    <!-- <Board /> -->
     <v-row no-gutters>
       <v-col
-        class="kanban-column"
         v-for="(candidates, key) in candidatesGrouped"
         :key="key"
         sm="2"
+        style="min-width: 150px;"
       >
-        <h3>{{ key }}</h3>
-        <draggable
-          :data-stage="key"
-          @add="onAdd"
-          class="list-group"
-          v-model="candidatesGrouped[key]"
-          group="candidates"
-          @change="log"
-        >
-          <div
-            :data-pk="candidate.pk"
-            class="list-group-item"
-            v-for="(candidate, index) in candidates"
-            :key="candidate.pk"
+        <div class="kanban-column">
+          <h2 style="text-align: center;">{{ StagesMap[key] }}</h2>
+          <draggable
+            :data-stage="key"
+            @add="onAdd"
+            class="list-group"
+            v-model="candidatesGrouped[key]"
+            group="candidates"
+            @change="log"
           >
-            {{ candidate.first_name }} {{ candidate.pk }}
-          </div>
-        </draggable>
+            <div
+              :data-pk="candidate.pk"
+              class="list-group-item"
+              v-for="candidate in candidates"
+              :key="candidate.pk"
+            >
+              <CandidateCard :candidate="candidate" />
+            </div>
+          </draggable>
+        </div>
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import Board from "./Board";
 import draggable from "vuedraggable";
+import CandidateCard from "./CandidateCard";
+import { StagesMap } from "../utils/data";
+
 import { mapActions, mapGetters } from "vuex";
 const storeActions = mapActions("candidates", ["updateCandidate"]);
-const storeGetters = mapGetters("candidates", ["candidates", "candidatesGrouped", "candidatesMappedByPk"]);
+const storeGetters = mapGetters("candidates", [
+  "candidates",
+  "candidatesGrouped",
+  "candidatesMappedByPk",
+]);
 
 export default {
   display: "Kanban",
@@ -44,60 +51,15 @@ export default {
   props: {},
   data() {
     return {
-      test: {
-        AP: [
-          {
-            first_name: "John",
-            last_name: "Doe",
-            phone: "123456789",
-            address: "Fake st, Fakeland CA",
-            stage: "AP",
-            resume: null,
-            pk: 2,
-          },
-          {
-            first_name: "asds",
-            last_name: "asdd",
-            phone: "asd",
-            address: "asd",
-            stage: "AP",
-            resume: null,
-            pk: 9,
-          },
-        ],
-        PS: [],
-        OS: [],
-        OF: [],
-        AC: [],
-        RE: [
-          {
-            first_name: "a",
-            last_name: "s",
-            phone: "s",
-            address: "s",
-            stage: "RE",
-            resume: null,
-            pk: 14,
-          },
-          {
-            first_name: "a",
-            last_name: "s",
-            phone: "s",
-            address: "s",
-            stage: "RE",
-            resume: null,
-            pk: 15,
-          },
-        ],
-      },
+      StagesMap,
     };
   },
   computed: {
     ...storeGetters,
   },
   components: {
-    Board,
     draggable,
+    CandidateCard,
   },
 
   methods: {
@@ -126,3 +88,14 @@ export default {
   },
 };
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.kanban-column {
+  min-height: 500px;
+  background-color: aliceblue;
+  margin: 5px;
+  padding: 2rem 0;
+  padding-top: 1rem;
+}
+</style>

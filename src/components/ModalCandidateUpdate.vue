@@ -67,7 +67,9 @@
             "
             >Save
           </v-btn>
-
+          <v-btn color="error" @click="deleteCandidate(candidateToEdit.pk)">
+            Delete
+          </v-btn>
           <v-btn color="blue darken-1" text @click="dialog = false"
             >Close</v-btn
           >
@@ -75,7 +77,7 @@
       </v-card>
     </v-dialog>
     <v-btn color="primary" dark @click.stop="dialog = true">
-      Edit
+      {{btnHtml}}
     </v-btn>
   </div>
 </template>
@@ -83,11 +85,15 @@
 <script>
 import { mapActions } from "vuex";
 
-const actions = mapActions("candidates", ["updateCandidate"]);
+const actions = mapActions("candidates", [
+  "updateCandidate",
+  "deleteCandidate",
+]);
 
 export default {
   name: "Modal",
   props: {
+    btnHtml: String,
     title: String,
     candidate: Object,
   },
