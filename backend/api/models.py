@@ -11,6 +11,10 @@ class Message(models.Model):
     subject = models.CharField(max_length=200)
     body = models.TextField()
 
+# TODO: add rating if time
+# class Rating(models.Model):
+#     rating = models.SmallIntegerField()
+#     Candidate = models.ForeignKey()
 
 class Candidate(models.Model):
     STAGES = (

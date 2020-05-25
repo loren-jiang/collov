@@ -10,13 +10,15 @@
       >
         <h3>{{ key }}</h3>
         <draggable
-          :move="onMove"
+          :data-stage="key"
+          @add="onAdd"
           class="list-group"
           v-model="candidatesGrouped[key]"
           group="candidates"
           @change="log"
         >
           <div
+            :data-pk="candidate.pk"
             class="list-group-item"
             v-for="(candidate, index) in candidates"
             :key="candidate.pk"
@@ -32,17 +34,16 @@
 <script>
 import Board from "./Board";
 import draggable from "vuedraggable";
+import { mapActions, mapGetters } from "vuex";
+const storeActions = mapActions("candidates", ["updateCandidate"]);
+const storeGetters = mapGetters("candidates", ["candidates", "candidatesGrouped", "candidatesMappedByPk"]);
 
 export default {
   display: "Kanban",
 
-  props: {
-    candidatesGrouped: Object, // TODO: need to integrate draggable with vuex store
-  },
+  props: {},
   data() {
     return {
-      stages: ["AP", "PS", "OS", "OF", "AC", "RE"],
-      
       test: {
         AP: [
           {
@@ -88,29 +89,25 @@ export default {
             pk: 15,
           },
         ],
-      
-      
       },
     };
   },
-
+  computed: {
+    ...storeGetters,
+  },
   components: {
     Board,
     draggable,
   },
 
   methods: {
-    add: function() {
-      // this.list.push({ name: "Juan" });
+    onAdd: function(evt) {
+      const newStage = evt.target.dataset.stage;
+      const candidate = this.candidatesMappedByPk[evt.item.dataset.pk];
+      candidate.stage = newStage;
+      this.updateCandidate(candidate);
     },
-    replace: function() {
-      // this.list = [{ name: "Edgard" }];
-    },
-    clone: function(el) {
-      return {
-        name: el.pk + " cloned",
-      };
-    },
+    ...storeActions,
     log: function(evt) {
       window.console.log(evt);
     },
@@ -122,9 +119,6 @@ export default {
     onMove({ relatedContext, draggedContext }) {
       const relatedElement = relatedContext.element;
       const draggedElement = draggedContext.element;
-      window.console.log("relatedElement", relatedContext);
-      window.console.log("draggedElement", draggedContext);
-
       // return (
       //   (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
       // );

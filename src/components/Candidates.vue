@@ -1,6 +1,7 @@
 <template>
   <v-container class="kanban-board">
-    <Kanban v-bind:candidatesGrouped="candidatesGrouped" />
+    <!-- <Kanban :candidatesGrouped="candidatesGrouped" :candidates="candidates" /> -->
+    <Kanban />
     <br />
     <p>First name</p>
     <input type="text" placeholder="First name" v-model="first_name" />
@@ -42,7 +43,7 @@
     <div
       class="candidate"
       v-for="(candidate, index) in candidates"
-      :key="index"
+      :key="candidate.pk"
     >
       <p class="candidate-index">[{{ index }}]</p>
       <p class="candidate-pk" v-html="candidate.pk"></p>

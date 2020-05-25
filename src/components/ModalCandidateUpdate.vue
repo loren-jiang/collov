@@ -44,29 +44,7 @@
                 <option value="AC">Accepted</option>
                 <option value="RE">Rejected</option>
               </select>
-              <div>
-                <v-btn
-                  @click="
-                    dialog = false;
-                    updateCandidate({
-                      first_name: candidateToEdit.first_name,
-                      last_name: candidateToEdit.last_name,
-                      phone: candidateToEdit.phone,
-                      address: candidateToEdit.address,
-                      stage: candidateToEdit.stage,
-                      pk: candidateToEdit.pk,
-                    });
-                  "
-                  :disabled="
-                    !candidateToEdit.first_name ||
-                      !candidateToEdit.last_name ||
-                      !candidateToEdit.phone ||
-                      !candidateToEdit.address ||
-                      !candidateToEdit.stage
-                  "
-                  >Save</v-btn
-                >
-              </div>
+              <div></div>
               <!-- TODO: add resume file field in the form -->
             </v-form>
           </v-container>
@@ -74,7 +52,21 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="onSave">Save</v-btn>
+          <v-btn
+            color="primary"
+            @click="
+              dialog = false;
+              updateCandidate(candidateToEdit);
+            "
+            :disabled="
+              !candidateToEdit.first_name ||
+                !candidateToEdit.last_name ||
+                !candidateToEdit.phone ||
+                !candidateToEdit.address ||
+                !candidateToEdit.stage
+            "
+            >Save
+          </v-btn>
 
           <v-btn color="blue darken-1" text @click="dialog = false"
             >Close</v-btn
@@ -89,7 +81,6 @@
 </template>
 
 <script>
-import CandidateUpdateForm from "./CandidateUpdateForm";
 import { mapActions } from "vuex";
 
 const actions = mapActions("candidates", ["updateCandidate"]);
@@ -108,14 +99,16 @@ export default {
       },
     };
   },
-  components: {
-    CandidateUpdateForm,
-  },
+  components: {},
   methods: {
     ...actions,
-    onSave: (e) => {
-      window.console.log(e);
-    },
   },
 };
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.v-card__text {
+  width: unset;
+}
+</style>

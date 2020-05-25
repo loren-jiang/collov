@@ -1,5 +1,8 @@
 import candidateService from '../../services/candidateService'
 
+const STAGES = ["AP", "PS", "OS", "OF", "AC", "RE"];
+
+
 const state = {
     candidates: [],
     lastFetchedCandidate: null,
@@ -11,6 +14,20 @@ const getters = {
     },
     lastFetchedCandidate: state => {
         return state.lastFetchedCandidate
+    },
+    candidatesGrouped: state => {
+        const stageMap = {};
+        STAGES.forEach((s) => {
+            stageMap[s] = state.candidates.filter((c) => c.stage === s);
+        });
+        return stageMap;
+    },
+    candidatesMappedByPk: state => {
+        const pkMap = {};
+        state.candidates.forEach(c => {
+            pkMap[c.pk] = c
+        })
+        return pkMap
     }
 }
 
