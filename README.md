@@ -57,6 +57,9 @@ The Vue application will be served from localhost:8080 and the Django API and st
 - S3 + CloudFront to serve media files
 	- Using boto3 and django-storages packages to serve media uploads through AWS
 
+- Docker
+    - Containerize with Docker
+
 ## Author
 
 - Loren Jiang
