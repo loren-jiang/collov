@@ -22,9 +22,7 @@ Repo for take home assignment for Collov software position. This project was boo
 	- Vue.Draggable (https://github.com/SortableJS/Vue.Draggable)
 
 -  ### Deployment:
-	- Heroku (free dynos)
-		- Caveat: I didn't realize upon deployment that dynos can't serve media uploads (see section on "Things to Improve" for CDN solution)
-  
+	- Heroku (free dynos)  
  
 ## Running local (if you wish)
 ### Prereqs:
