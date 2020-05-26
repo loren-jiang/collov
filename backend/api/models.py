@@ -32,11 +32,22 @@ class Rating(models.Model):
     Candidate = models.ForeignKey(
         Candidate, on_delete=models.CASCADE, related_name="ratings")
 
+    class Meta:
+        def __str__(self):
+            return str(self.rating)
+
 
 # ------- Serializers --------
 
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ('rating', 'Candidate')
+
+
 class CandidateSerializer(serializers.HyperlinkedModelSerializer):
+
     class Meta:
         model = Candidate
         fields = ('first_name', 'last_name', 'phone',
-                  'address', 'email', 'comments', 'stage', 'resume', 'pk')
+                  'address', 'email', 'comments', 'stage', 'resume', 'pk', 'ratings')
