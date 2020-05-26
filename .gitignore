@@ -22,3 +22,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Local media files
+/media/uploads
+/media
