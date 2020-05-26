@@ -65,6 +65,7 @@
               <br />
 
               <v-file-input
+                show-size
                 accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
 text/plain, application/pdf, image/*"
                 label="Resume"
@@ -156,9 +157,11 @@ export default {
         // check in case user cancels file upload
         if (this.newResumeUpload) {
           candidateNoResumeKey.resume = this.newResumeUpload;
-          this.candidateToEdit.resume = this.newResumeUpload.name;
-          window.console.log(this.newResumeUpload.name);
-          this.updateCandidate(candidateNoResumeKey);
+          this.updateCandidate(candidateNoResumeKey).then((resp) => {
+            //window.console.log(resp);
+            //window.console.log(this.candidate.resume);
+            this.candidateToEdit.resume = this.candidate.resume;
+          });
         }
       } else {
         this.updateCandidate(candidateNoResumeKey);

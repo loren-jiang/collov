@@ -1,8 +1,6 @@
 from django.db import models
-from django.core.files.storage import FileSystemStorage
 from rest_framework import serializers
-
-fs = FileSystemStorage(location='/media/uploads')
+from backend.storages import PublicMediaStorage
 
 # ------- Models ---------
 
@@ -22,14 +20,14 @@ class Candidate(models.Model):
     phone = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
     stage = models.CharField(max_length=2, choices=STAGES)
-    resume = models.FileField(upload_to='uploads/', blank=True, null=True)
+    resume = models.FileField(storage=PublicMediaStorage(), blank=True, null=True)
     email = models.EmailField(max_length=254)
     comments = models.TextField(default='')
 
 
 class Rating(models.Model):
     rating = models.SmallIntegerField()
-    Candidate = models.ForeignKey(
+    candidate = models.ForeignKey(
         Candidate, on_delete=models.CASCADE, related_name="ratings")
 
     class Meta:
@@ -42,7 +40,7 @@ class Rating(models.Model):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ('rating', 'Candidate')
+        fields = ('rating', 'candidate')
 
 
 class CandidateSerializer(serializers.HyperlinkedModelSerializer):
@@ -50,4 +48,4 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Candidate
         fields = ('first_name', 'last_name', 'phone',
-                  'address', 'email', 'comments', 'stage', 'resume', 'pk', 'ratings')
+                  'address', 'email', 'comments', 'stage', 'resume', 'pk')

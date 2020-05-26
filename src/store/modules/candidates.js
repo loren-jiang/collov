@@ -55,7 +55,7 @@ const actions = {
                         obj[key] = resp[key];
                         return obj;
                     }, {});
-         
+
                 commit('addCandidate', filtered)
             })
     },
@@ -64,9 +64,10 @@ const actions = {
         commit('deleteCandidate', id)
     },
     updateCandidate({ commit }, candidate) {
-        candidateService.updateCandidate(candidate)
-            .then(candidate => {
-                commit('updateCandidate', candidate);
+        return candidateService.updateCandidate(candidate)
+            .then((resp) => {
+                commit('updateCandidate', resp);
+                return resp
             })
     }
 }

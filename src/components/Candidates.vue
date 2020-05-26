@@ -2,9 +2,9 @@
   <v-container class="kanban-board">
     <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
-        <h1>
-          Collov-Kanban
-        </h1>
+        <h2>
+          Collov
+        </h2>
       </div>
 
       <v-spacer></v-spacer>

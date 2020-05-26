@@ -12,6 +12,7 @@
           <draggable
             :data-stage="key"
             @add="onAdd"
+            @choose="onChoose"
             class="list-group"
             v-model="candidatesGrouped[key]"
             group="candidates"
@@ -65,12 +66,13 @@ export default {
     onAdd: function(evt) {
       const newStage = evt.target.dataset.stage;
       const candidate = this.candidatesMappedByPk[evt.item.dataset.pk];
+      candidate.stage = newStage;
       const { resume, ...candidateNoResumeKey } = candidate; // filter out resume key from object
-      candidateNoResumeKey.stage = newStage;
-      this.updateCandidate(candidateNoResumeKey)
+      this.updateCandidate(candidateNoResumeKey);
     },
+    onChoose: function(evt) {},
     ...storeActions,
-  
+
     orderList() {
       // this.list = this.list.sort((one, two) => {
       //   return one.order - two.order;

@@ -14,13 +14,13 @@ Repo for take home assignment for Collov software position. This project was boo
 	- Django 2.2 server
 	- PostgreSQL database
 	- Django REST Framework
-
+	- AWS S3 + CloudFront for media file storages
+  
 -  ### Frontend:
 	- Vue + Vue CLI
 	- Vuetify (Material Design framework)
 	- Vue.Draggable (https://github.com/SortableJS/Vue.Draggable)
 
-  
 -  ### Deployment:
 	- Heroku (free dynos)
 		- Caveat: I didn't realize upon deployment that dynos can't serve media uploads (see section on "Things to Improve" for CDN solution)
@@ -54,8 +54,8 @@ The Vue application will be served from localhost:8080 and the Django API and st
 - Admin login
 	- Done through [JWT authentication](https://www.pydanny.com/drf-jwt-axios-vue.html)
 
-- S3 + CloudFront to serve media files
-	- Using boto3 and django-storages packages to serve media uploads through AWS
+- S3 + CloudFront to serve static files
+	- Already using boto3 and django-storages packages to serve media uploads through AWS, so static files  could also be served
 
 - Docker
     - Containerize with Docker

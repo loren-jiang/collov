@@ -136,6 +136,18 @@ STATICFILES_DIRS = []
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# AWS 
+AWS_ACCESS_KEY_ID=os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY=os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_S3_CUSTOM_DOMAIN="d3mcxph6a3vs56.cloudfront.net"
+AWS_STORAGE_BUCKET_NAME="cf-simple-s3-origin-collov-kanban-030921771521"
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+AWS_PUBLIC_MEDIA_LOCATION = 'media/uploads'
+DEFAULT_FILE_STORAGE = 'backend.storages.PublicMediaStorage'
+
 ##########
 # STATIC #
 ##########
