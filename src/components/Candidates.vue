@@ -30,27 +30,42 @@
         <v-card-title class="headline"> Add candidate </v-card-title>
 
         <v-card-text>
-          <v-container>
-            <br />
-            <p>First name</p>
-            <input type="text" placeholder="First name" v-model="first_name" />
-            <p>Last name</p>
-            <input type="text" placeholder="Last name" v-model="last_name" />
-            <p>Phone number</p>
-            <input type="text" placeholder="Phone number" v-model="phone" />
-            <p>Address</p>
-            <input type="text" placeholder="Address" v-model="address" />
-            <p>Stage</p>
-            <select type="text" placeholder="Stage" v-model="stage">
-              <option value="AP">Applied</option>
-              <option value="PS">Phone screen</option>
-              <option value="OS">On site</option>
-              <option value="OF">Offered</option>
-              <option value="AC">Accepted</option>
-              <option value="RE">Rejected</option>
-            </select>
-            <br /><br />
-          </v-container>
+          <v-form>
+            <v-container>
+              <v-row>
+                <v-col md="6" sm="12">
+                  <v-text-field label="First name" v-model="first_name" />
+                </v-col>
+                <v-col md="6" sm="12">
+                  <v-text-field placeholder="Last name" v-model="last_name" />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col md="6" sm="12">
+                  <v-text-field label="Phone number" v-model="phone" />
+                </v-col>
+                <v-col md="6" sm="12"> </v-col>
+              </v-row>
+
+              <v-text-field
+                placeholder="Address"
+                v-model="address"
+                label="Address"
+              />
+              <v-select v-model="stage" :items="stageOptions" label="Stage">
+              </v-select>
+
+              <v-file-input
+                show-size
+                accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+text/plain, application/pdf, image/*"
+                label="Resume"
+                v-model="resume"
+              ></v-file-input>
+
+              <br /><br />
+            </v-container>
+          </v-form>
         </v-card-text>
 
         <v-card-actions>
@@ -64,6 +79,7 @@
                 phone: phone,
                 address: address,
                 stage: stage,
+                resume: resume,
               });
               newCandidateModal = false;
             "
@@ -97,13 +113,20 @@ export default {
       phone: "",
       address: "",
       stage: Object.keys(StagesMap)[0],
+      resume: undefined,
       newCandidateModal: false,
+      stageOptions: Object.keys(StagesMap).map((key) => ({
+        text: StagesMap[key],
+        value: key,
+      })),
     };
   },
   computed: mapState({
     candidates: (state) => state.candidates.candidates,
   }),
-  methods: mapActions("candidates", ["addCandidate", "deleteCandidate"]),
+  methods: {
+    ...mapActions("candidates", ["addCandidate", "deleteCandidate"]),
+  },
   created() {
     this.$store.dispatch("candidates/getCandidates");
   },

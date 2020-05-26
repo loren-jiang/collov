@@ -1,5 +1,3 @@
-const GoogleFontsPlugin = require("google-fonts-webpack-plugin")
-
 module.exports = {
   "outputDir": "dist",
   "assetsDir": "static",
@@ -12,5 +10,5 @@ module.exports = {
   },
   "transpileDependencies": [
     "vuetify"
-  ],
+  ]
 }

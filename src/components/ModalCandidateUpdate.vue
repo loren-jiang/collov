@@ -5,59 +5,64 @@
         <v-card-title class="headline">{{ title }}</v-card-title>
 
         <v-card-text>
-          <v-container>
-            <v-form>
-              <p>First name</p>
-              <input
-                type="text"
-                placeholder="First name"
-                v-model="candidateToEdit.first_name"
-              />
-              <p>Last name</p>
-              <input
-                type="text"
-                placeholder="Last name"
-                v-model="candidateToEdit.last_name"
-              />
-              <p>Phone number</p>
-              <input
-                type="text"
-                placeholder="Phone number"
-                v-model="candidateToEdit.phone"
-              />
-              <p>Address</p>
-              <input
-                type="text"
+          <v-form>
+            <v-container>
+              <v-row>
+                <v-col md="6" sm="12">
+                  <v-text-field
+                    label="First name"
+                    v-model="candidateToEdit.first_name"
+                  />
+                </v-col>
+                <v-col md="6" sm="12">
+                  <v-text-field
+                    placeholder="Last name"
+                    v-model="candidateToEdit.last_name"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col md="6" sm="12">
+                  <v-text-field
+                    label="Phone number"
+                    v-model="candidateToEdit.phone"
+                  />
+                </v-col>
+                <v-col md="6" sm="12"> </v-col>
+              </v-row>
+              <v-text-field
                 placeholder="Address"
                 v-model="candidateToEdit.address"
+                label="Address"
               />
-              <p>Stage</p>
-              <select
-                type="text"
-                placeholder="Stage"
+              <v-select
                 v-model="candidateToEdit.stage"
+                :items="stageOptions"
+                label="Stage"
               >
-                <option value="AP">Applied</option>
-                <option value="PS">Phone screen</option>
-                <option value="OS">On site</option>
-                <option value="OF">Offered</option>
-                <option value="AC">Accepted</option>
-                <option value="RE">Rejected</option>
-              </select>
-              <div></div>
-              <!-- TODO: add resume file field in the form -->
-            </v-form>
-          </v-container>
+              </v-select>
+              <p>Resume</p>
+              <p v-if="candidateToEdit.resume">
+                Current:
+                <a :href="candidateToEdit.resume">
+                  {{ candidateToEdit.resume.split("/").pop() }}
+                </a>
+              </p>
+              <v-file-input
+                accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+text/plain, application/pdf, image/*"
+                label="Resume"
+                v-model="newResumeUpload"
+              ></v-file-input>
+            </v-container>
+          </v-form>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
-            @click="
-              dialog = false;
-              updateCandidate(candidateToEdit);
-            "
+            @click="handleSave"
             :disabled="
               !candidateToEdit.first_name ||
                 !candidateToEdit.last_name ||
@@ -77,15 +82,16 @@
       </v-card>
     </v-dialog>
     <v-btn color="primary" dark @click.stop="dialog = true">
-      {{btnHtml}}
+      {{ btnHtml }}
     </v-btn>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import { StagesMap } from "../utils/data";
 
-const actions = mapActions("candidates", [
+const storeActions = mapActions("candidates", [
   "updateCandidate",
   "deleteCandidate",
 ]);
@@ -103,11 +109,35 @@ export default {
       candidateToEdit: {
         ...this.$props.candidate,
       },
+      stageOptions: Object.keys(StagesMap).map((key) => ({
+        text: StagesMap[key],
+        value: key,
+      })),
+      newResumeUpload: undefined, // needed to handle new file uploads
     };
   },
   components: {},
   methods: {
-    ...actions,
+    ...storeActions,
+    handleSave() {
+      this.dialog = false;
+      const { resume, ...candidateNoResumeKey } = this.candidateToEdit; // filter out resume key from object
+
+      // if new file,  assign new file to resume key
+      // else, we don't want to send candidateToEdit.resume since it's a string...
+      // TODO: a bit hacky, maybe fix this if time
+      if (typeof this.newResumeUpload !== undefined) {
+        // check in case user cancels file upload
+        if (this.newResumeUpload) {
+          candidateNoResumeKey.resume = this.newResumeUpload;
+          this.candidateToEdit.resume = this.newResumeUpload.name;
+          window.console.log(this.newResumeUpload.name)
+          this.updateCandidate(candidateNoResumeKey);
+        }
+      } else {
+        this.updateCandidate(candidateNoResumeKey);
+      }
+    },
   },
 };
 </script>

@@ -16,16 +16,15 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Roboto&display=swap");
-#app {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    font-family: "Raleway", sans-serif;
-  }
-  font-family: "Roboto", sans-serif;
+
+<style>
+hr {
+  max-width: 80%;
 }
+
+h1, h2, h3, h4, h5 {
+  font-family: "Arial";
+}
+
+
 </style>
