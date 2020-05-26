@@ -55,8 +55,7 @@ const actions = {
                         obj[key] = resp[key];
                         return obj;
                     }, {});
-                console.log({ pk: resp.pk, ...candidate })
-                console.log(filtered)
+         
                 commit('addCandidate', filtered)
             })
     },
