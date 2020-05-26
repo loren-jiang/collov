@@ -4,17 +4,8 @@ from rest_framework import serializers
 
 fs = FileSystemStorage(location='/media/uploads')
 
-# ------- Models --------
+# ------- Models ---------
 
-
-class Message(models.Model):
-    subject = models.CharField(max_length=200)
-    body = models.TextField()
-
-# TODO: add rating if time
-# class Rating(models.Model):
-#     rating = models.SmallIntegerField()
-#     Candidate = models.ForeignKey()
 
 class Candidate(models.Model):
     STAGES = (
@@ -32,17 +23,20 @@ class Candidate(models.Model):
     address = models.CharField(max_length=200)
     stage = models.CharField(max_length=2, choices=STAGES)
     resume = models.FileField(upload_to='uploads/', blank=True, null=True)
+    email = models.EmailField(max_length=254)
+    comments = models.TextField(default='')
+
+
+class Rating(models.Model):
+    rating = models.SmallIntegerField()
+    Candidate = models.ForeignKey(
+        Candidate, on_delete=models.CASCADE, related_name="ratings")
 
 
 # ------- Serializers --------
 
-class MessageSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Message
-        fields = ('url', 'subject', 'body', 'pk')
-
-
 class CandidateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Candidate
-        fields = ('first_name', 'last_name', 'phone', 'address', 'stage', 'resume', 'pk')
+        fields = ('first_name', 'last_name', 'phone',
+                  'address', 'email', 'comments', 'stage', 'resume', 'pk')

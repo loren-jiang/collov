@@ -28,7 +28,9 @@ export default {
             .then(response => response.data)
     },
     postCandidate(payload) {
-        return api.post(`candidates/`, formalize(payload))
+        const formData = formalize(payload);
+        // logFormData(formData)
+        return api.post(`candidates/`, formData)
             .then(response => response.data)
     },
     deleteCandidate(id) {
@@ -37,7 +39,6 @@ export default {
     },
     updateCandidate(payload) {
         const formData = formalize(payload);
-        logFormData(formData)
         return api.put(`candidates/${payload.pk}/`, formData)
             .then(response => response.data)
             .catch(error => window.console.log(error))

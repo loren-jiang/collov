@@ -47,7 +47,7 @@ const actions = {
     addCandidate({ commit }, candidate) {
         candidateService.postCandidate(candidate)
             .then((resp) => {
-                const fields = ['first_name', 'last_name', 'resume', 'address', 'phone', 'stage', 'pk'];
+                const fields = ['first_name', 'last_name', 'resume', 'email', 'address', 'phone', 'stage', 'pk'];
 
                 const filtered = Object.keys(resp)
                     .filter(key => fields.includes(key))
@@ -55,9 +55,9 @@ const actions = {
                         obj[key] = resp[key];
                         return obj;
                     }, {});
-                window.console.log(filtered)
+                console.log({ pk: resp.pk, ...candidate })
+                console.log(filtered)
                 commit('addCandidate', filtered)
-                //     commit('addCandidate', candidate)
             })
     },
     deleteCandidate({ commit }, id) {
@@ -66,7 +66,9 @@ const actions = {
     },
     updateCandidate({ commit }, candidate) {
         candidateService.updateCandidate(candidate)
-        commit('updateCandidate', candidate)
+            .then(candidate => {
+                commit('updateCandidate', candidate);
+            })
     }
 }
 

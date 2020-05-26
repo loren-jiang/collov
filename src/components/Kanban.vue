@@ -15,7 +15,6 @@
             class="list-group"
             v-model="candidatesGrouped[key]"
             group="candidates"
-            @change="log"
           >
             <div
               :data-pk="candidate.pk"
@@ -66,13 +65,12 @@ export default {
     onAdd: function(evt) {
       const newStage = evt.target.dataset.stage;
       const candidate = this.candidatesMappedByPk[evt.item.dataset.pk];
-      candidate.stage = newStage;
-      this.updateCandidate(candidate);
+      const { resume, ...candidateNoResumeKey } = candidate; // filter out resume key from object
+      candidateNoResumeKey.stage = newStage;
+      this.updateCandidate(candidateNoResumeKey)
     },
     ...storeActions,
-    log: function(evt) {
-      window.console.log(evt);
-    },
+  
     orderList() {
       // this.list = this.list.sort((one, two) => {
       //   return one.order - two.order;
@@ -97,5 +95,8 @@ export default {
   margin: 5px;
   padding: 2rem 0;
   padding-top: 1rem;
+}
+.list-group-item {
+  cursor: grab;
 }
 </style>

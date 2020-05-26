@@ -10,10 +10,9 @@ from rest_framework import routers
 from django.conf.urls.static import static
 from django.conf import settings
 
-from .api.views import index_view, MessageViewSet, CandidateViewSet
+from .api.views import index_view, CandidateViewSet
 
 router = routers.DefaultRouter()
-router.register('messages', MessageViewSet)
 router.register('candidates', CandidateViewSet)
 
 urlpatterns = [

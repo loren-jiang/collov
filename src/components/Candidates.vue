@@ -17,13 +17,17 @@
             addCandidate;
           "
         >
+          new candidate
           <v-icon>mdi-account-plus</v-icon>
         </v-btn>
-        <v-btn text>
+        <!-- TODO: implement login if time -->
+        <!-- <v-btn text>
           <v-icon>mdi-login-variant</v-icon>
-        </v-btn>
+        </v-btn> -->
       </span>
     </v-app-bar>
+    <br />
+    <br />
     <Kanban />
     <v-dialog v-model="newCandidateModal" max-width="500px">
       <v-card>
@@ -44,7 +48,14 @@
                 <v-col md="6" sm="12">
                   <v-text-field label="Phone number" v-model="phone" />
                 </v-col>
-                <v-col md="6" sm="12"> </v-col>
+                <v-col md="6" sm="12">
+                  <v-text-field
+                    v-model="email"
+                    :rules="emailRules"
+                    label="Email"
+                    required
+                  ></v-text-field>
+                </v-col>
               </v-row>
 
               <v-text-field
@@ -52,16 +63,21 @@
                 v-model="address"
                 label="Address"
               />
-              <v-select v-model="stage" :items="stageOptions" label="Stage">
-              </v-select>
-
-              <v-file-input
-                show-size
-                accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
+              <v-row>
+                <v-col md="3" sm="12">
+                  <v-select v-model="stage" :items="stageOptions" label="Stage">
+                  </v-select>
+                </v-col>
+                <v-col md="9" sm="12">
+                  <v-file-input
+                    show-size
+                    accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint,
 text/plain, application/pdf, image/*"
-                label="Resume"
-                v-model="resume"
-              ></v-file-input>
+                    label="Resume"
+                    v-model="resume"
+                  ></v-file-input>
+                </v-col>
+              </v-row>
 
               <br /><br />
             </v-container>
@@ -77,6 +93,7 @@ text/plain, application/pdf, image/*"
                 first_name: first_name,
                 last_name: last_name,
                 phone: phone,
+                email: email,
                 address: address,
                 stage: stage,
                 resume: resume,
@@ -112,8 +129,14 @@ export default {
       last_name: "",
       phone: "",
       address: "",
+      email: "",
+      emailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      ],
       stage: Object.keys(StagesMap)[0],
       resume: undefined,
+      
       newCandidateModal: false,
       stageOptions: Object.keys(StagesMap).map((key) => ({
         text: StagesMap[key],
